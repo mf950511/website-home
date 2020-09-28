@@ -1,0 +1,116 @@
+import * as React from 'react'
+const THREE = require('three')
+const { useEffect, useRef, useState } = React
+import { debounce } from 'lib/untils'
+
+const Home = () => {
+  const containerRef = useRef(null)
+  const [] = useState()
+  useEffect(() => {
+    init()
+    animate()
+    window.addEventListener('resize', initFunc, false)
+    return ()=>{
+      window.removeEventListener('resize', initFunc, false)
+    }
+  }, [])
+  const initFunc = debounce(()=>{
+    resetData()
+    init()
+    animate()
+  }, 300)
+
+  const resetData = () => {
+    container.removeChild(renderer.domElement);
+    window.cancelAnimationFrame(requestAnimationFrameId)
+    document.removeEventListener('mousemove', onMouseMove, false);
+    windowHalfX = aspect = mouseX = mouseY = fov = plane = far = 0
+    renderer = scene = camera = container = starStuff = stars = null
+  }
+  let scene: any, 
+  camera: any, 
+  renderer: any, 
+  container: any, 
+  aspect, 
+  fov, 
+  plane, 
+  far, 
+  mouseX: number, 
+  mouseY: number, 
+  windowHalfX: number, 
+  windowHalfY: number, 
+  geometry, 
+  starStuff, 
+  materialOptions, 
+  stars,
+  requestAnimationFrameId: any = null
+  const init = () => {
+    container = containerRef.current
+    mouseX = 0;
+    mouseY = 0;
+    aspect = window.innerWidth / window.innerHeight;
+    fov = 40;
+    plane = 1;
+    far = 800;
+    windowHalfX = window.innerWidth / 2;
+    windowHalfY = window.innerHeight / 2;
+    camera = new THREE.PerspectiveCamera(
+      fov,
+      aspect,
+      plane,
+      far
+    );
+    camera.position.z = far / 2;
+    scene = new THREE.Scene({ antialias: true });
+    scene.fog = new THREE.FogExp2(0x1b1b1b, 0.0001);
+    starForge();
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio((window.devicePixelRatio) ? window.devicePixelRatio : 1);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.autoClear = false;
+    renderer.setClearColor(0x000000, 0.0);
+    container.appendChild(renderer.domElement);
+    document.addEventListener('mousemove', onMouseMove, false);
+  }
+
+  const starForge = () => {
+    const amount = 45000;
+    geometry = new THREE.SphereGeometry(1000, 100, 50);
+    materialOptions = {
+      color: new THREE.Color(0xffffff),
+      size: 1.1,
+      transparency: true,
+      opacity: 0.8
+    };
+    starStuff = new THREE.PointsMaterial(materialOptions);
+    for (var i = 0; i < amount; i++) {
+      var item = new THREE.Vector3();
+      item.x = Math.random() * 2000 - 1000;
+      item.y = Math.random() * 2000 - 1000;
+      item.z = Math.random() * 2000 - 1000;
+      geometry.vertices.push(item);
+    }
+    stars = new THREE.PointCloud(geometry, starStuff);
+    scene.add(stars);
+  }
+  const animate = () => {
+    requestAnimationFrameId = requestAnimationFrame(animate);
+    render();
+  }
+  const render = () => {
+    camera.position.x += (mouseX - camera.position.x) * 0.005;
+    camera.position.y += (-mouseY - camera.position.y) * 0.005;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+  }
+  const onMouseMove = (e: any) => {
+    mouseX = e.clientX - windowHalfX;
+    mouseY = e.clientY - windowHalfY;
+  }
+  return (
+    <div ref={ containerRef }>
+    </div>
+  )
+}
+
+export default Home
