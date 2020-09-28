@@ -2,6 +2,9 @@
   "name": "website-home",
   "version": "1.0.0",
   "description": "",
+  "resolutions": {
+    "bin-wrapper": "npm:bin-wrapper-china"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
     "@types/react": "^16.9.17",
