@@ -2,6 +2,7 @@ import * as React from 'react'
 const THREE = require('three')
 const { useEffect, useRef, useState } = React
 import { debounce } from 'lib/untils'
+import cat from './cat.jpg'
 
 const Home = () => {
   const containerRef = useRef(null)
@@ -109,6 +110,18 @@ const Home = () => {
   }
   return (
     <div ref={ containerRef }>
+      <div className="main-show">
+        <div className="img-wrapper">
+          <img src={ cat } className="img"/>
+        </div>
+        <div className="link-wrapper">
+          <a className="link" href="/react-admin">管理后台</a>
+          <a className="link" href="/blog">个人博客</a>
+          <a className="link" href="https://github.com/mf950511">github</a>
+          <a className="link" href="https://juejin.im/user/2137106337250013">掘金</a>
+          <a className="link" href="https://blog.csdn.net/weixin_41900457">CSDN博客</a>
+        </div>
+      </div>
     </div>
   )
 }
