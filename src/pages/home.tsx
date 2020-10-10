@@ -115,7 +115,7 @@ const Home = () => {
           <img src={ cat } className="img"/>
         </div>
         <div className="link-wrapper">
-          <a className="link" href="/react-admin">管理后台</a>
+          <a className="link" href="/react-admin/index.html">管理后台</a>
           <a className="link" href="/blog">个人博客</a>
           <a className="link" href="https://github.com/mf950511">github</a>
           <a className="link" href="https://juejin.im/user/2137106337250013">掘金</a>
