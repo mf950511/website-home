@@ -7,6 +7,7 @@ import cat from './cat.jpg'
 const Home = () => {
   const containerRef = useRef(null)
   const [] = useState()
+  
   useEffect(() => {
     init()
     animate()
