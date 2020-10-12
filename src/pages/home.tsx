@@ -25,8 +25,10 @@ const Home = () => {
     container.removeChild(renderer.domElement);
     window.cancelAnimationFrame(requestAnimationFrameId)
     document.removeEventListener('mousemove', onMouseMove, false);
-    windowHalfX = aspect = mouseX = mouseY = fov = plane = far = 0
-    renderer = scene = camera = container = starStuff = stars = null
+    document.removeEventListener('mouseout', onMouseout, false);
+    windowHalfX = aspect = mouseX = mouseY = fov = plane = far = randomX = randomY = 0
+    renderer = scene = camera = container = starStuff = stars = timerId = null
+    xFlag = yFlag = true
   }
   let scene: any, 
   camera: any, 
@@ -44,11 +46,20 @@ const Home = () => {
   starStuff, 
   materialOptions, 
   stars,
-  requestAnimationFrameId: any = null
+  requestAnimationFrameId: any = null,
+  randomX: number,
+  randomY: number,
+  xFlag: boolean,
+  yFlag: boolean,
+  timerId: any = null
   const init = () => {
     container = containerRef.current
     mouseX = 0;
     mouseY = 0;
+    randomX = 0;
+    randomY = 0;
+    xFlag = true;
+    yFlag = true;
     aspect = window.innerWidth / window.innerHeight;
     fov = 40;
     plane = 1;
@@ -72,6 +83,29 @@ const Home = () => {
     renderer.setClearColor(0x000000, 0.0);
     container.appendChild(renderer.domElement);
     document.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('mouseout', onMouseout, false)
+    renderIn()
+  }
+
+  const renderIn = () => {
+    timerId = setInterval(() => {
+      randomX = xFlag ? (randomX + 10) : (randomX - 10)
+      randomY = yFlag ? (randomY + 10) : (randomY - 10)
+      if(randomX > windowHalfX * 2) {
+        xFlag = false
+      }
+      if(randomX < 0) {
+        xFlag = true
+      }
+      if(randomY > windowHalfY * 2) {
+        yFlag = false
+      }
+      if(randomY < 0) {
+        yFlag = true
+      }
+      mouseX = randomX - windowHalfX;
+      mouseY = randomY - windowHalfY;
+    }, 100)
   }
 
   const starForge = () => {
@@ -105,8 +139,15 @@ const Home = () => {
     renderer.render(scene, camera);
   }
   const onMouseMove = (e: any) => {
+    clearInterval(timerId)
+    timerId = null
     mouseX = e.clientX - windowHalfX;
     mouseY = e.clientY - windowHalfY;
+  }
+  const onMouseout = (e: any) => {
+    randomX = mouseX
+    randomY = mouseY
+    renderIn()
   }
   return (
     <div ref={ containerRef }>
